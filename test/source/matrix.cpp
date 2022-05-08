@@ -1,15 +1,12 @@
-// #include <catch2/catch.hpp>
-// #include <doctest/doctest.h>
-#include <OAC/cache/matrix.hpp>
 #include <gtest/gtest.h>
 
-// TEST_CASE("Matrix") { REQUIRE(oac::cache::EXAMPLES_DIR == "assets/matrices");
-// }
+#include <OAC/cache/matrix.hpp>
 
-using namespace ::testing;
+TEST(CacheModule, GlobalThings) { ASSERT_TRUE(oac::cache::EXAMPLES_DIR == "assets/matrices"); }
 
-TEST(FactorialTest, HandlesZeroInput) { EXPECT_EQ(1, 1); }
+TEST(Matrix, Constructor) {
+  oac::cache::Matrix m(2, 2);
 
-TEST(Anything, BasicChecks) {
-  ASSERT_TRUE(oac::cache::EXAMPLES_DIR == "assets/matrices");
+  ASSERT_EQ(m.rows(), 2);
+  ASSERT_EQ(m.cols(), 2);
 }

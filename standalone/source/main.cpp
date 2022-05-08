@@ -2,7 +2,7 @@
 
 #include <OAC/cache/matrix.hpp>
 
-auto main(int argc, char** argv) -> int {
+auto main(int argc, char **argv) -> int {
   // using namespace oac::cache;
   // Matrix<double> matrix(2, 2);
   fmt::print("Hello world\n");

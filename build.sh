@@ -59,7 +59,8 @@ if [ $REBUILD = true ]; then
 	if [ $TEST = true ]; then
 		cmake -S test -B build/test -DCMAKE_BUILD_TYPE="${MODE}" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON "${FLAGS}"
 		cmake --build build/test
-		CTEST_OUTPUT_ON_FAILURE=1 GTEST_COLOR=yes cmake --build build/test --target test -- -j8
+		# CTEST_OUTPUT_ON_FAILURE=1 GTEST_COLOR=yes cmake --build build/test --target test -- -j8
+		./build/test/CacheMatrixTests
 		exit 0
 	else
 		cmake -S standalone -B build/"${MODE}"/standalone -DCMAKE_BUILD_TYPE="${MODE}" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON "${FLAGS}"
@@ -69,7 +70,8 @@ fi
 if [ $TEST = true ]; then
 	cmake -S test -B build/test
 	cmake --build build/test
-	CTEST_OUTPUT_ON_FAILURE=1 GTEST_COLOR=yes cmake --build build/test --target test -- -j8
+	# CTEST_OUTPUT_ON_FAILURE=1 GTEST_COLOR=yes cmake --build build/test --target test -- -j8
+	./build/test/CacheMatrixTests
 
 	exit 0
 fi
