@@ -53,22 +53,25 @@ while getopts "rtf:dRF" options; do
 	esac
 done
 
-if [ $TEST = true ]; then
-	# Enable compiler as clang++
- #        export C=/usr/bin/g++
- #        export CC=/usr/bin/g++
-	# export CXX=/usr/bin/g++
-	cmake -S test -B build/test
-	cmake --build build/test
-	CTEST_OUTPUT_ON_FAILURE=1 cmake --build build/test --target test
-
-	exit 0
-fi
-
 # If rebuild
 if [ $REBUILD = true ]; then
 	[[ $FORCE = true ]] && rm -rf build
-	cmake -S standalone -B build/"${MODE}"/standalone -DCMAKE_BUILD_TYPE="${MODE}" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON "${FLAGS}"
+	if [ $TEST = true ]; then
+		cmake -S test -B build/test -DCMAKE_BUILD_TYPE="${MODE}" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON "${FLAGS}"
+		cmake --build build/test
+		CTEST_OUTPUT_ON_FAILURE=1 GTEST_COLOR=yes cmake --build build/test --target test -- -j8
+		exit 0
+	else
+		cmake -S standalone -B build/"${MODE}"/standalone -DCMAKE_BUILD_TYPE="${MODE}" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON "${FLAGS}"
+	fi
+fi
+
+if [ $TEST = true ]; then
+	cmake -S test -B build/test
+	cmake --build build/test
+	CTEST_OUTPUT_ON_FAILURE=1 GTEST_COLOR=yes cmake --build build/test --target test -- -j8
+
+	exit 0
 fi
 
 if cmake --build build/"${MODE}"/standalone -- -j8; then
