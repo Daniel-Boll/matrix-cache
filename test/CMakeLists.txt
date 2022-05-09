@@ -16,6 +16,11 @@ include(../cmake/tools.cmake)
 include(../cmake/CPM.cmake)
 
 CPMAddPackage("gh:TheLartians/Format.cmake@1.7.3")
+CPMAddPackage(
+  NAME fmt
+  GITHUB_REPOSITORY fmtlib/fmt
+  GIT_TAG 8.1.1
+)
 
 # =================== Choose your test framework =====================
 # --------------------------------------------------------------------#
@@ -54,7 +59,7 @@ endforeach()
 # @IF CATCH2 uncomment the below line
 # target_link_libraries(${PROJECT_NAME} Catch2 CacheMatrix::CacheMatrix)
 # @IF GOOGLETEST uncomment the below lines
-target_link_libraries(${PROJECT_NAME} CacheMatrix::CacheMatrix gtest_main)
+target_link_libraries(${PROJECT_NAME} CacheMatrix::CacheMatrix gtest_main fmt)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)

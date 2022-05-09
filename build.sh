@@ -59,7 +59,8 @@ if [ $REBUILD = true ]; then
 	if [ $TEST = true ]; then
 		cmake -S test -B build/test -DCMAKE_BUILD_TYPE="${MODE}" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON "${FLAGS}"
 		cmake --build build/test
-		# CTEST_OUTPUT_ON_FAILURE=1 GTEST_COLOR=yes cmake --build build/test --target test -- -j8
+		mv build/test/compile_commands.json . >/dev/null 2>&1
+
 		./build/test/CacheMatrixTests
 		exit 0
 	else
@@ -69,8 +70,9 @@ fi
 
 if [ $TEST = true ]; then
 	cmake -S test -B build/test
-	cmake --build build/test
+	cmake --build build/test -- --quiet
 	# CTEST_OUTPUT_ON_FAILURE=1 GTEST_COLOR=yes cmake --build build/test --target test -- -j8
+	mv build/test/compile_commands.json . >/dev/null 2>&1
 	./build/test/CacheMatrixTests
 
 	exit 0
@@ -80,7 +82,7 @@ if cmake --build build/"${MODE}"/standalone -- -j8; then
 	mv build/"${MODE}"/standalone/compile_commands.json . >/dev/null 2>&1
 	if [ $RUN = true ]; then
 		if [ $MODE = "Release" ]; then
-			./build/${MODE}/standalone/CacheMatrix
+			./build/${MODE}/standalone/CacheMatrix "${PARAMETERS}"
 		else
 			lldb ./build/${MODE}/standalone/CacheMatrix
 		fi
