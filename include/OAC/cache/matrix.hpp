@@ -16,16 +16,35 @@ namespace oac {
     public:
       Matrix(int32_t rows, int32_t cols);
       Matrix(int32_t rows, int32_t cols, T value);
-      Matrix(const std::string &filepath);
+      Matrix(const Matrix<T> &other);
+      ~Matrix();
 
-      const T &operator()(int32_t row, int32_t col) const;
-      T &operator()(int32_t row, int32_t col);
+      // Acessors
+      inline constexpr T &operator()(int32_t row, int32_t col) const { return _data[row][col]; }
+      inline constexpr T &operator()(int32_t row, int32_t col) { return _data[row][col]; }
+      inline constexpr T &at(int32_t row, int32_t col) const { return _data[row][col]; }
+      inline constexpr T &at(int32_t row, int32_t col) { return _data[row][col]; }
 
-      const T &at(int32_t row, int32_t col) const;
-      T &at(int32_t row, int32_t col);
+      // Operators
+      Matrix<T> &operator+(const Matrix<T> &other);
+      Matrix<T> &operator-(const Matrix<T> &other);
+      Matrix<T> &operator/(const Matrix<T> &other);
+      Matrix<T> &operator*(const Matrix<T> &other);
+      Matrix<T> &operator^(const Matrix<T> &other);
+
+      Matrix<T> &operator=(const Matrix<T> &other);
+
+      Matrix<T> &operator+=(const Matrix<T> &other);
+      Matrix<T> &operator-=(const Matrix<T> &other);
+      Matrix<T> &operator/=(const Matrix<T> &other);
+      Matrix<T> &operator*=(const Matrix<T> &other);
+      Matrix<T> &operator^=(const Matrix<T> &other);
 
       void fill(T value);
       void fillRandom(int32_t min, int32_t max);
+
+      void transposeInPlace();
+      [[nodiscard]] Matrix<T> transpose() const;
 
       int32_t rows() const;
       int32_t cols() const;
