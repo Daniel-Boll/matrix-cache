@@ -78,7 +78,6 @@ TYPED_TEST(MatrixTest, FillRandom) {
 
 // {{{1 MatrixTest::Transpose
 TYPED_TEST(MatrixTest, Transpose) {
-  this->m1_->fillRandom(0, 100);
   oac::cache::Matrix<TypeParam> m2 = this->m1_->transpose();
 
   for (int i = 0; i < this->m1_->rows(); i++) {
@@ -92,8 +91,6 @@ TYPED_TEST(MatrixTest, Transpose) {
 // {{{1 MatrixTest::TransposeInPlace
 TYPED_TEST(MatrixTest, TransposeInPlace) {
   using oac::cache::Matrix;
-  this->m1_->fillRandom(0, 100);
-
   Matrix<TypeParam> *m2 = new Matrix<TypeParam>(*this->m1_);
 
   this->m1_->transposeInPlace();
@@ -137,7 +134,7 @@ TYPED_TEST(MatrixTest, Mul) {
   using oac::cache::Matrix;
   Matrix<TypeParam> m3 = *this->m1_ * *this->m2_;
 
-  TypeParam currentCell = 0;
+  TypeParam currentCell = TypeParam{0};
 
   for (int i = 0; i < this->m1_->rows(); i++) {
     for (int j = 0; j < this->m2_->cols(); j++) {
@@ -145,7 +142,7 @@ TYPED_TEST(MatrixTest, Mul) {
         currentCell += this->m1_->at(i, k) * this->m2_->at(k, j);
       }
       EXPECT_EQ(currentCell, m3.at(i, j));
-      currentCell = 0;
+      currentCell = TypeParam{0};
     }
   }
 }
@@ -156,7 +153,7 @@ TYPED_TEST(MatrixTest, TransposeMul) {
   using oac::cache::Matrix;
   Matrix<TypeParam> m3 = *this->m1_ ^ *this->m2_;
 
-  TypeParam currentCell = 0;
+  TypeParam currentCell = TypeParam{0};
 
   for (int i = 0; i < this->m1_->rows(); i++) {
     for (int j = 0; j < this->m2_->cols(); j++) {
@@ -164,7 +161,7 @@ TYPED_TEST(MatrixTest, TransposeMul) {
         currentCell += this->m1_->at(i, k) * this->m2_->at(j, k);
       }
       EXPECT_EQ(currentCell, m3.at(i, j));
-      currentCell = 0;
+      currentCell = TypeParam{0};
     }
   }
 }
