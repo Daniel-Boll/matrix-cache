@@ -2,7 +2,6 @@
 
 #include <OAC/cache/matrix.hpp>
 #include <OAC/utils/random.hpp>
-#include <iostream>
 
 using MatrixTypes = ::testing::Types<int32_t, float, double>;
 TYPED_TEST_SUITE(MatrixTest, MatrixTypes);

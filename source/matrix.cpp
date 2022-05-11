@@ -2,6 +2,7 @@
 
 #include <OAC/cache/matrix.hpp>
 #include <OAC/utils/random.hpp>
+#include <cstdlib>
 #include <stdexcept>
 
 namespace oac {
@@ -189,35 +190,21 @@ namespace oac {
     }
 
     template <typename T> void Matrix<T>::fillRandom(int32_t min, int32_t max) {
+      oac::utils::Random random(min, max);
       for (int32_t row = 0; row < _rows; row++)
-        for (int32_t col = 0; col < _cols; col++)
-          _data[row][col] = oac::utils::randomBetween(min, max);
+        for (int32_t col = 0; col < _cols; col++) _data[row][col] = random.next();
     }
 
     template <typename T> void Matrix<T>::transposeInPlace() {
-      T** newData = new T*[_cols];
-      for (int32_t i = 0; i < _cols; i++) {
-        newData[i] = new T[_rows];
-      }
+      Matrix<T> result(_cols, _rows);
 
       for (int32_t row = 0; row < _rows; row++) {
         for (int32_t col = 0; col < _cols; col++) {
-          newData[col][row] = _data[row][col];
+          result(col, row) = _data[row][col];
         }
       }
 
-      for (int32_t i = 0; i < _rows; i++) {
-        delete[] _data[i];
-      }
-      delete[] _data;
-
-      _data = newData;
-
-      int32_t tmp = _rows;
-      _rows = _cols;
-      _cols = tmp;
-
-      return;
+      *this = result;
     }
 
     template <typename T> Matrix<T> Matrix<T>::transpose() const {
@@ -231,7 +218,6 @@ namespace oac {
 
       return result;
     }
-
   }  // namespace cache
 }  // namespace oac
 

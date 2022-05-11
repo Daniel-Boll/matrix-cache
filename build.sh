@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
-REBUILD=false
 RUN=false
+TEST=false
+BENCHMARK=false
+
 MODE="Release"
+REBUILD=false
 FORCE=false
 FLAGS=""
-TEST=false
 
 export CPM_SOURCE_CACHE=$HOME/.cache/CPM
 # export LANG=C++
@@ -14,7 +16,7 @@ export CPM_SOURCE_CACHE=$HOME/.cache/CPM
 # export CXX=clang++
 
 usage() { # Function: Print a help message.
-	echo "Usage: $0 [ -r RUN ] [ -R (RE)BUILD ] [ -d DEBUG ] [ -f flags ] [ -F FORCE ]" 1>&2
+	echo "Usage: $0 [ -r RUN ] [ -d DEBUG ] [ -b BENCHMARK ] [ -R (RE)BUILD ] [ -F FORCE ] [ -f flags ]" 1>&2
 }
 
 exit_abnormal() { # Function: Exit with error.
@@ -27,13 +29,17 @@ if [ $# -eq 0 ]; then
 	exit_abnormal
 fi
 
-while getopts "rtf:dRF" options; do
+while getopts "rtbf:dRF" options; do
 	case "${options}" in
 	r)
 		RUN=true
 		;;
 	t)
 		TEST=true
+		;;
+
+	b)
+		BENCHMARK=true
 		;;
 	R)
 		REBUILD=true
@@ -63,9 +69,25 @@ if [ $REBUILD = true ]; then
 
 		./build/test/CacheMatrixTests
 		exit 0
+	elif [ $BENCHMARK = true ]; then
+		cmake -S benchmark -B build/benchmark -DCMAKE_BUILD_TYPE="${MODE}" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON "${FLAGS}"
+		cmake --build build/benchmark
+		mv build/benchmark/compile_commands.json . >/dev/null 2>&1
+
+		./build/benchmark/CacheMatrixBenchmark
+		exit 0
 	else
 		cmake -S standalone -B build/"${MODE}"/standalone -DCMAKE_BUILD_TYPE="${MODE}" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON "${FLAGS}"
 	fi
+fi
+
+if [ $BENCHMARK = true ]; then
+	cmake -S benchmark -B build/benchmark -DCMAKE_BUILD_TYPE="${MODE}" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON "${FLAGS}"
+	cmake --build build/benchmark
+	mv build/benchmark/compile_commands.json . >/dev/null 2>&1
+
+	./build/benchmark/CacheMatrixBenchmark
+	exit 0
 fi
 
 if [ $TEST = true ]; then

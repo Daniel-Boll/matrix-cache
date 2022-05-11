@@ -24,17 +24,17 @@ CPMAddPackage(
 
 # =================== Choose your test framework =====================
 # --------------------------------------------------------------------#
-#                          google/googletest                          #
+# google/googletest                          #
 # --------------------------------------------------------------------#
 CPMAddPackage("gh:google/googletest#release-1.11.0@v1.11.0")
 
 # --------------------------------------------------------------------#
-#                           catchorg/Catch2                           #
+# catchorg/Catch2                           #
 # --------------------------------------------------------------------#
 # CPMAddPackage("gh:catchorg/Catch2@2.13.9")
 
 # --------------------------------------------------------------------#
-#                            onqtam/doctest                           #
+# onqtam/doctest                           #
 # --------------------------------------------------------------------#
 # CPMAddPackage("gh:onqtam/doctest@2.4.8")
 # ====================================================================
@@ -53,12 +53,10 @@ foreach(source ${sources})
   message(STATUS "Adding ${source}")
 endforeach()
 
-
-# @IF DOCTEST uncomment the below line
-# target_link_libraries(${PROJECT_NAME} doctest::doctest CacheMatrix::CacheMatrix)
-# @IF CATCH2 uncomment the below line
-# target_link_libraries(${PROJECT_NAME} Catch2 CacheMatrix::CacheMatrix)
-# @IF GOOGLETEST uncomment the below lines
+# @IF DOCTEST uncomment the below line target_link_libraries(${PROJECT_NAME} doctest::doctest
+# CacheMatrix::CacheMatrix) @IF CATCH2 uncomment the below line
+# target_link_libraries(${PROJECT_NAME} Catch2 CacheMatrix::CacheMatrix) @IF GOOGLETEST uncomment
+# the below lines
 target_link_libraries(${PROJECT_NAME} CacheMatrix::CacheMatrix gtest_main fmt)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
@@ -70,8 +68,8 @@ if(NOT TEST_INSTALLED_VERSION)
     # target_compile_options(CacheMatrix PUBLIC -Wall -Wpedantic -Wextra -Werror)
   elseif(MSVC)
     target_compile_options(CacheMatrix PUBLIC /W4 /WX)
-    # @IF DOCTEST uncomment the below line
-    # target_compile_definitions(${PROJECT_NAME} PUBLIC DOCTEST_CONFIG_USE_STD_HEADERS)
+    # @IF DOCTEST uncomment the below line target_compile_definitions(${PROJECT_NAME} PUBLIC
+    # DOCTEST_CONFIG_USE_STD_HEADERS)
   endif()
 endif()
 
@@ -79,8 +77,7 @@ endif()
 
 enable_testing()
 
-# @IF DOCTEST uncomment the below lines
-# include(${doctest_SOURCE_DIR}/scripts/cmake/doctest.cmake)
+# @IF DOCTEST uncomment the below lines include(${doctest_SOURCE_DIR}/scripts/cmake/doctest.cmake)
 # doctest_discover_tests(${PROJECT_NAME})
 
 # @IF {CATCH2,GOOGLETEST} uncomment the below line
