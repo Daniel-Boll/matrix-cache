@@ -2,13 +2,14 @@
 #include <fmt/core.h>
 
 #include <OAC/cache/matrix.hpp>
+#include <memory>
 
 using oac::cache::Matrix;
 
 // {{{1 Matrix constructor
 static void BM_Constructor(benchmark::State& state) {
   for (auto _ : state) {
-    Matrix<double>* m = new Matrix<double>(state.range(0), state.range(0));
+    auto m = std::make_unique<Matrix<double>>(state.range(0), state.range(0));
   }
 }
 // }}}1
@@ -17,7 +18,7 @@ static void BM_Constructor(benchmark::State& state) {
 static void BM_FillRandom(benchmark::State& state) {
   for (auto _ : state) {
     state.PauseTiming();
-    Matrix<double>* m = new Matrix<double>(state.range(0), state.range(0));
+    auto m = std::make_unique<Matrix<double>>(state.range(0), state.range(0));
     state.ResumeTiming();
     m->fillRandom(0, 1e3);
   }
@@ -28,11 +29,11 @@ static void BM_FillRandom(benchmark::State& state) {
 static void BM_Transposition(benchmark::State& state) {
   for (auto _ : state) {
     state.PauseTiming();
-    Matrix<double>* m = new Matrix<double>(state.range(0), state.range(0));
+    auto m = std::make_unique<Matrix<double>>(state.range(0), state.range(0));
     m->fillRandom(0, 1);
     state.ResumeTiming();
 
-    m->transposeInPlace();
+    Matrix<double> m2 = m->transpose();
   }
 }
 // }}}
@@ -42,8 +43,8 @@ static void BM_Multiplication(benchmark::State& state) {
   for (auto _ : state) {
     state.PauseTiming();
 
-    Matrix<double>* m1 = new Matrix<double>(state.range(0), state.range(0));
-    Matrix<double>* m2 = new Matrix<double>(state.range(0), state.range(0));
+    auto m1 = std::make_unique<Matrix<double>>(state.range(0), state.range(0));
+    auto m2 = std::make_unique<Matrix<double>>(state.range(0), state.range(0));
 
     m1->fillRandom(0, 1e3);
     m2->fillRandom(0, 1e3);
@@ -60,8 +61,8 @@ static void BM_TransposedMultiplication(benchmark::State& state) {
   for (auto _ : state) {
     state.PauseTiming();
 
-    Matrix<double>* m1 = new Matrix<double>(state.range(0), state.range(0));
-    Matrix<double>* m2 = new Matrix<double>(state.range(0), state.range(0));
+    auto m1 = std::make_unique<Matrix<double>>(state.range(0), state.range(0));
+    auto m2 = std::make_unique<Matrix<double>>(state.range(0), state.range(0));
 
     m1->fillRandom(0, 1e3);
     m2->fillRandom(0, 1e3);
@@ -73,9 +74,9 @@ static void BM_TransposedMultiplication(benchmark::State& state) {
 }
 // }}}
 
-static constexpr const uint8_t startAt = 10;
-static constexpr const uint8_t endAt = 30;
-static constexpr const uint8_t incrementBy = 10;
+static constexpr const uint32_t startAt = 200;
+static constexpr const uint32_t endAt = 2e3 + startAt;
+static constexpr const uint32_t incrementBy = 200;
 
 BENCHMARK(BM_Constructor)->DenseRange(startAt, endAt, incrementBy);
 BENCHMARK(BM_FillRandom)->DenseRange(startAt, endAt, incrementBy);

@@ -29,7 +29,7 @@ namespace oac {
       Matrix<T> &operator+(const Matrix<T> &other);
       Matrix<T> &operator-(const Matrix<T> &other);
       Matrix<T> &operator/(const Matrix<T> &other);
-      Matrix<T> &operator*(const Matrix<T> &other);
+      [[nodiscard]] Matrix<T> &operator*(const Matrix<T> &other);
       Matrix<T> &operator^(const Matrix<T> &other);
 
       Matrix<T> &operator=(const Matrix<T> &other);
@@ -45,6 +45,8 @@ namespace oac {
 
       void transposeInPlace();
       [[nodiscard]] Matrix<T> transpose() const;
+
+      void print() const;
 
       int32_t rows() const;
       int32_t cols() const;

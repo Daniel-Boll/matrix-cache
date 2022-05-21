@@ -99,7 +99,7 @@ namespace oac {
     }
 
     template <typename T> Matrix<T>& Matrix<T>::operator*(const Matrix<T>& other) {
-      if (_rows != other._rows || _cols != other._cols)
+      if (_cols != other._rows)
         throw std::domain_error(fmt::format("Matrix dimensions do not match: {}x{} vs {}x{}", _rows,
                                             _cols, other._rows, other._cols));
 
@@ -114,14 +114,14 @@ namespace oac {
     }
 
     template <typename T> Matrix<T>& Matrix<T>::operator^(const Matrix<T>& other) {
-      if (_rows != other._cols || _cols != other._rows)
+      if (_cols != other._cols)
         throw std::domain_error(fmt::format("Matrix dimensions do not match: {}x{} vs {}x{}", _rows,
                                             _cols, other._rows, other._cols));
 
-      Matrix<T>* temporaryMatrix = new Matrix<T>(_rows, other._cols);
+      Matrix<T>* temporaryMatrix = new Matrix<T>(_rows, other._rows);
 
       for (int32_t i = 0; i < _rows; i++)
-        for (int32_t j = 0; j < other._cols; j++)
+        for (int32_t j = 0; j < other._rows; j++)
           for (int32_t k = 0; k < _cols; k++)
             temporaryMatrix->_data[i][j] += _data[i][k] * other._data[j][k];
 
@@ -140,7 +140,7 @@ namespace oac {
     }
 
     template <typename T> Matrix<T>& Matrix<T>::operator*=(const Matrix<T>& other) {
-      if (_rows != other._rows || _cols != other._cols)
+      if (_cols != other._rows)
         throw std::domain_error(fmt::format("Matrix dimensions do not match: {}x{} vs {}x{}", _rows,
                                             _cols, other._rows, other._cols));
 
@@ -180,7 +180,7 @@ namespace oac {
     }
 
     template <typename T> Matrix<T>& Matrix<T>::operator^=(const Matrix<T>& other) {
-      if (_rows != other._cols || _cols != other._rows)
+      if (_cols != other._cols)
         throw std::domain_error(fmt::format("Matrix dimensions do not match: {}x{} vs {}x{}", _rows,
                                             _cols, other._rows, other._cols));
 
@@ -217,6 +217,15 @@ namespace oac {
       }
 
       return result;
+    }
+
+    template <typename T> void Matrix<T>::print() const {
+      for (int32_t row = 0; row < _rows; row++) {
+        for (int32_t col = 0; col < _cols; col++) {
+          fmt::print("{} ", _data[row][col]);
+        }
+        fmt::print("\n");
+      }
     }
   }  // namespace cache
 }  // namespace oac
